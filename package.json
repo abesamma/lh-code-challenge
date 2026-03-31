@@ -1,0 +1,40 @@
+{
+  "name": "lh-code-challenge",
+  "version": "1.0.0",
+  "description": "Clinical appointment booking API challenge with Express, SQLite, Docker, and OpenAPI docs.",
+  "license": "ISC",
+  "author": "AB Samma",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "start:prod": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f app",
+    "openapi:generate": "tsx scripts/generate-openapi.ts",
+    "openapi:build-docs": "npm run openapi:generate && redocly build-docs openapi/openapi.json --output openapi/index.html --title \"Clinical Appointment Booking API\"",
+    "openapi:preview": "npm run openapi:build-docs && tsx scripts/serve-openapi.ts",
+    "openapi:lint": "npm run openapi:generate && redocly lint openapi/openapi.json"
+  },
+  "dependencies": {
+    "better-sqlite3": "12.8.0",
+    "dotenv": "17.3.1",
+    "express": "5.2.1",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2",
+    "@redocly/cli": "2.25.3",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/express": "5.0.6",
+    "@types/node": "25.5.0",
+    "tsx": "4.21.0",
+    "typescript": "6.0.2"
+  }
+}

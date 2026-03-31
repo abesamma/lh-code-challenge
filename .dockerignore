@@ -1,0 +1,10 @@
+node_modules
+dist
+data
+playwright-report
+test-results
+openapi
+coverage
+.git
+.env
+npm-debug.log*
