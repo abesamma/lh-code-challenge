@@ -1,6 +1,6 @@
 # Clinical Appointment Booking API
 
-An intentionally small Express API for a clinic scheduling workflow. It uses SQLite for persistence, ships with Docker support, includes a generated OpenAPI spec, and comes with reusable curl scripts for the core roles: patient, clinician, and admin.
+An intentionally small Express API written in Typescript for a clinic scheduling workflow. It uses SQLite for persistence, ships with Docker support, includes a generated OpenAPI spec, and comes with reusable curl scripts for the core roles: patient, clinician, and admin.
 
 ## Technical Notes
 
@@ -12,6 +12,7 @@ not conform to expected schema before they hit the handlers
 - The persistence layer is set to utilize write-ahead log as an optimization technique for handling writes separately from the main database so they do not block reads, allowing for more performant behaviour in high volume concurrent traffic.However, this assumes the app will handle only lean, constrained textual data. All bets are off if the traffic includes
 huge files in transactions i.e. media files. For such usecases, it would better to a proper database like PostgreSQL instead of SQLite
 - Dependencies are pinned for security and for deterministic builds
+- We've added a delete and login functionality outside the scope of the original exercise to service user creation and cleanup cleanly. These could be externded further if this were to become a serious project for production
 
 ## Includes
 
