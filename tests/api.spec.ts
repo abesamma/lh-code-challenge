@@ -257,3 +257,56 @@ test.describe('Error handling for clinician appointment retrieval', () => {
         expect(response.status()).toBe(400);
     });
 });
+
+test.describe('Authorization for protected appointment operations', () => {
+    testAsPatient('patient should not retrieve all appointments', async ({ api }) => {
+        const response = await api.request.get(APPOINTMENTS_ENDPOINT);
+
+        expect(response.status()).toBe(403);
+        await expect(response.json()).resolves.toEqual({ error: 'Forbidden' });
+    });
+
+    testAsPatient('patient should not retrieve clinician appointments', async ({ api }) => {
+        const response = await api.request.get(`${CLINICIAN_API_ENDPOINT}/${testClinician.userId}/appointments`);
+
+        expect(response.status()).toBe(403);
+        await expect(response.json()).resolves.toEqual({ error: 'Forbidden' });
+    });
+
+    testAsClinician('clinician should not retrieve all appointments', async ({ api }) => {
+        const response = await api.request.get(APPOINTMENTS_ENDPOINT);
+
+        expect(response.status()).toBe(403);
+        await expect(response.json()).resolves.toEqual({ error: 'Forbidden' });
+    });
+
+    testAsClinician('clinician should not create an appointment', async ({ api }) => {
+        const response = await api.request.post(APPOINTMENTS_ENDPOINT, {
+            data: {
+                patientId: testPatient.userId,
+                clinicianId: testClinician.userId,
+                start: '2024-07-02T10:00:00Z',
+                end: '2024-07-02T10:30:00Z',
+                reason: 'Unauthorized clinician booking'
+            }
+        });
+
+        expect(response.status()).toBe(403);
+        await expect(response.json()).resolves.toEqual({ error: 'Forbidden' });
+    });
+
+    testAsAdmin('admin should not create an appointment', async ({ api }) => {
+        const response = await api.request.post(APPOINTMENTS_ENDPOINT, {
+            data: {
+                patientId: testPatient.userId,
+                clinicianId: testClinician.userId,
+                start: '2024-07-02T11:00:00Z',
+                end: '2024-07-02T11:30:00Z',
+                reason: 'Unauthorized admin booking'
+            }
+        });
+
+        expect(response.status()).toBe(403);
+        await expect(response.json()).resolves.toEqual({ error: 'Forbidden' });
+    });
+});
