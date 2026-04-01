@@ -244,13 +244,3 @@ Delete user:
 ```bash
 curl -X DELETE http://localhost:3000/api/users/<user-id>
 ```
-
-## Technical Notes
-
-- Functionally, this app is a simple CRUD app demonstrating clean design in keeping the pure function core
-separate from application shell concerns. Zod is used in the validator middleware to reject requests that do
-not conform to expected schema before they hit the handlers
-- To allow for concurrency-safe operations when booking an appointment, we add a db level constraint where an appointment check for overlap and final booking occur as a single atomic transaction. We search against an index of patient appointments with `start`, `end` and `patient id` and then perform a check and insert as a single, immediate transaction. This removes any window of opportunity for double booking if we had done a naive check at the application layer. However, this assumes that only patients can write. Obviously we'd need to add expand on this by using say a `BEFORE INSERT` trigger to do an overlap check prior to insert if we had things like migrations, admin work or a future service that does an appointment write
-- The persistence layer is set to utilize write-ahead log as an optimization technique for handling writes separately from the main database so they do not block reads, allowing for more performant behaviour in high volume concurrent traffic.However, this assumes the app will handle only lean, constrained textual data. All bets are off if the traffic includes
-huge files in transactions i.e. media files. For such usecases, it would better to a proper database like PostgreSQL instead of SQLite
-- Dependencies are pinned for security and for deterministic builds
