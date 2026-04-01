@@ -13,6 +13,8 @@ not conform to expected schema before they hit the handlers
 huge files in transactions i.e. media files. For such usecases, it would better to a proper database like PostgreSQL instead of SQLite
 - Dependencies are pinned for security and for deterministic builds
 - We've added a delete and login functionality outside the scope of the original exercise to service user creation and cleanup cleanly. These could be extended further if this were to become a serious project for production
+- There are a couple of deprecated Zod APIs that we depend on, but they're still functional. It has been a while since I used
+Zod so for the sake of correctness and time management, I have left them as such. Ideally, we'd need to migrate away from them
 
 ## Includes
 
